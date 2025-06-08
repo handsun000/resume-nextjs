@@ -137,6 +137,7 @@ const PageGrid = styled.div`
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  justify-content: center;
 `;
 
 const PageImageBlock = styled.div`

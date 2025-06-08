@@ -34,7 +34,8 @@ export interface Implementation {
   }[];
 }
 
-export interface Troubleshooting {
+export interface Troubleshooting {  
+  feature: string;
   problem: string;
   cause: string;
   solution: string;
@@ -45,11 +46,7 @@ export interface ResultReview {
   reviews: string[];
 }
 
-export interface Review {
-  content: string;
-  regret: string;
-  plan: string;
-}
+export type TroubleshootingList = Troubleshooting[];
 
 export interface ProjectDTO {
   id: number;
@@ -58,7 +55,6 @@ export interface ProjectDTO {
   overview: Overview;
   process: Process;
   implementation: Implementation;
-  troubleshooting: Troubleshooting;
+  troubleshootingList: TroubleshootingList;
   resultreview: ResultReview;
-  review: Review;
 }

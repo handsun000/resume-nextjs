@@ -7,8 +7,7 @@ import Overview from "./[projectId]/section/overview";
 
 import Implementation from "./[projectId]/section/implementation";
 import TroubleShooting from "./[projectId]/section/troubleShooting";
-import ResultReview from "./[projectId]/section/result";
-import Review from "./[projectId]/section/review";
+import ResultReview from "./[projectId]/section/resultreview";
 import { ProjectDTO } from "@/types/project";
 
 // 섹션 스타일
@@ -78,7 +77,7 @@ export default function Project({ project, onClose }: ProjectProps) {
     <Overview data={project.overview} key="overview" />,
     // <Process data={project.process} key="process" />,
     <Implementation data={project.implementation} key="impl" />,
-    <TroubleShooting data={project.troubleshooting} key="trouble" />,
+    <TroubleShooting data={project.troubleshootingList} key="trouble" />,
     <ResultReview data={project.resultreview} key="resultreview" />,
   ];
 

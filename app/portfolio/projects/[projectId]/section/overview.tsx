@@ -34,7 +34,7 @@ const Left = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 3rem 2.5rem;
+  padding: 3rem 1.5rem;
   min-width: 380px;
   @media (max-width: 900px) {
     padding: 2rem 1rem;
