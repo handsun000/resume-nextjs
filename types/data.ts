@@ -220,7 +220,7 @@ export const projects: ProjectDTO[] = [
         "제품 주문, 결제, 주문 내역 조회, 배송 상태 확인, 관리자 제품 관리(추가/삭제/활성화)",
       period: "2025.01 ~ 2025.01",
       members: "5명",
-      stack: "Java, Spring Boot, MySQL, Redis, JPA, Thymeleaf",
+      stack: "Java, Spring Boot, MySQL, JPA, Thymeleaf",
       role: "결제 기능 개발, 주문 내역 조회, 관리자 배송 상태 관리",
       link: "https://github.com/handsun000/NBE3-4-1-Team09",
     },
@@ -229,15 +229,15 @@ export const projects: ProjectDTO[] = [
       erdImg: "/assets/image/project/cafe/erd.png",
       uxImg: "/assets/image/project/cafe/ux.png",
       description:
-        "Spring Boot 기반의 주문/결제/배송 API, MySQL 데이터베이스, Redis 캐시, AWS EC2 배포, Docker 컨테이너 환경 구성",
+        "Spring Boot 기반의 주문/결제/배송 API, MySQL",
     },
     implementation: {
       features: [
         {
-          title: "결제 기능",
+          title: "주문 기능",
           descriptionSummary:
-            "사용자가 장바구니에 담은 커피 제품을 이메일과 주소 입력 후 결제할 수 있도록 구현했습니다.",
-          descriptionFull: `메인 화면에서 사용자가 원하는 커피 제품을 장바구니에 담고, 이메일과 주소(상세주소 포함)를 입력한 뒤 결제까지 완료할 수 있는 기능을 개발했습니다. 결제 완료 후에는 주문 정보가 서버에 안전하게 저장되며, 결제 과정에서 입력값 검증과 예외 처리를 통해 사용자 경험을 개선했습니다.`,
+            "사용자가 장바구니에 담은 커피 제품을 이메일과 주소 입력 후 주문할 수 있도록 구현했습니다.",
+          descriptionFull: `메인 화면에서 사용자가 원하는 커피 제품을 장바구니에 담고, 이메일과 주소(상세주소 포함)를 입력한 뒤 주문까지 완료할 수 있는 기능을 개발했습니다.`,
           archImage: { src: "", label: "" },
           pageImages: [
             {

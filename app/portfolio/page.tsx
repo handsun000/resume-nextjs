@@ -7,7 +7,6 @@ import styled from "styled-components";
 const Background = styled.div`
   min-height: 100vh;
   width: 100vw;
-  background: linear-gradient(120deg, #8ec5fc 0%, #e0c3fc 100%);
 `;
 
 const Portfolio = () => {

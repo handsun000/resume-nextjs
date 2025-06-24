@@ -3,13 +3,14 @@ import styled from "styled-components";
 import type { Overview } from "@/types/project";
 
 const OverviewWrap = styled.div`
-  min-height: 100vh;
   width: 100vw;
+  min-height: 100vh;
   display: flex;
-  align-items: center;
+  align-items: flex-start; /* center → flex-start로 변경 */
   justify-content: center;
   background: transparent;
   box-sizing: border-box;
+  padding: 4vh 0; /* 상하 여백 추가 */
 `;
 
 const ContentBox = styled.div`
@@ -20,16 +21,16 @@ const ContentBox = styled.div`
   box-shadow: 0 4px 32px rgba(31, 38, 135, 0.09);
   max-width: 1100px;
   width: 100%;
-  margin: 6vh 2vw;
+  margin: 0 2vw; /* 6vh 2vw → 0 2vw로 변경 */
   overflow: hidden;
   @media (max-width: 900px) {
     flex-direction: column;
-    margin: 2vw;
+    margin: 0 2vw; /* 2vw → 0 2vw로 변경 */
   }
 `;
 
 const Left = styled.div`
-  flex: 1.3; // 기존보다 더 넓게
+  flex: 1.3;
   background: #f2f4fa;
   display: flex;
   flex-direction: column;
@@ -44,9 +45,9 @@ const Left = styled.div`
 
 const Thumb = styled.img`
   width: 100%;
-  max-width: 420px; // 기존보다 크게
+  max-width: 420px;
   height: auto;
-  aspect-ratio: 16/9; // 세로 비율 고정(지원 브라우저만)
+  aspect-ratio: 16/9;
   border-radius: 14px;
   box-shadow: 0 4px 18px rgba(99, 102, 241, 0.09);
   margin-bottom: 1.5rem;
@@ -68,8 +69,12 @@ const Right = styled.div`
   display: flex;
   flex-direction: column;
   min-width: 360px;
-  @media (max-width: 900px) {
+  max-height: 100vh; /* 추가: 세로 공간 제한 */
+  overflow-y: auto; /* 추가: 내용이 넘칠 때 스크롤 */
+  @media (max-width: 900px) {E
     padding: 2rem 1rem;
+    max-height: unset; /* 모바일에서는 제한 해제 */
+    overflow-y: visible; /* 모바일에서는 스크롤 해제 */
   }
 `;
 
@@ -88,7 +93,7 @@ const InfoTableWrap = styled.div`
 const InfoTable = styled.table`
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 0.7rem; /* 행 간격 */
+  border-spacing: 0 0.7rem;
   margin-bottom: 1.5rem;
   th,
   td {
@@ -114,7 +119,6 @@ const InfoTable = styled.table`
     color: #333;
     background: #f9f9fe;
     border-radius: 0 8px 8px 0;
-    /* 긴 내용은 줄바꿈 */
     white-space: pre-line;
   }
   ul {

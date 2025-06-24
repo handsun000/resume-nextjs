@@ -5,50 +5,41 @@ import { motion, AnimatePresence } from "framer-motion";
 import Project from "../projects/projects";
 import { projects } from "@/types/data";
 
-// 커스텀 훅 (드래그 & 터치 스크롤)
+// Threshold 방식으로 드래그/클릭 분리
 function useHorizontalDragScroll() {
   const ref = useRef<HTMLDivElement>(null);
-  let isDown = false;
-  let startX = 0;
-  let scrollLeft = 0;
+  const isDown = useRef(false);
+  const startX = useRef(0);
+  const scrollLeft = useRef(0);
+  const dragThreshold = 5; // 5px 이동하면 드래그로 판단
+  const isDragging = useRef(false);
 
-  // 마우스 이벤트
   const onMouseDown = (e: React.MouseEvent) => {
-    isDown = true;
-    startX = e.pageX - (ref.current?.offsetLeft ?? 0);
-    scrollLeft = ref.current?.scrollLeft ?? 0;
+    isDown.current = true;
+    startX.current = e.pageX - (ref.current?.offsetLeft ?? 0);
+    scrollLeft.current = ref.current?.scrollLeft ?? 0;
+    isDragging.current = false;
     document.body.style.cursor = "grabbing";
   };
 
   const onMouseMove = (e: React.MouseEvent) => {
-    if (!isDown) return;
+    if (!isDown.current) return;
     e.preventDefault();
+    
     const x = e.pageX - (ref.current?.offsetLeft ?? 0);
-    const walk = (x - startX) * 1.2;
-    if (ref.current) ref.current.scrollLeft = scrollLeft - walk;
+    const walk = (x - startX.current) * 1.2;
+    
+    // 5px 이상 이동하면 드래그로 판단
+    if (Math.abs(walk) > dragThreshold) {
+      isDragging.current = true;
+      if (ref.current) ref.current.scrollLeft = scrollLeft.current - walk;
+    }
   };
 
-  const onMouseUpOrLeave = () => {
-    isDown = false;
+  const onMouseUp = () => {
+    isDown.current = false;
     document.body.style.cursor = "";
-  };
-
-  // 터치 이벤트
-  const onTouchStart = (e: React.TouchEvent) => {
-    isDown = true;
-    startX = e.touches[0].pageX - (ref.current?.offsetLeft ?? 0);
-    scrollLeft = ref.current?.scrollLeft ?? 0;
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (!isDown) return;
-    const x = e.touches[0].pageX - (ref.current?.offsetLeft ?? 0);
-    const walk = (x - startX) * 1.2;
-    if (ref.current) ref.current.scrollLeft = scrollLeft - walk;
-  };
-
-  const onTouchEnd = () => {
-    isDown = false;
+    return isDragging.current; // 드래그였다면 true 반환
   };
 
   return {
@@ -56,14 +47,9 @@ function useHorizontalDragScroll() {
     mouseHandlers: {
       onMouseDown,
       onMouseMove,
-      onMouseUp: onMouseUpOrLeave,
-      onMouseLeave: onMouseUpOrLeave,
+      onMouseUp,
     },
-    touchHandlers: {
-      onTouchStart,
-      onTouchMove,
-      onTouchEnd,
-    },
+    isDragging: isDragging.current
   };
 }
 
@@ -94,20 +80,27 @@ const SubTitle = styled.p`
   text-align: center;
 `;
 
-const HorizontalScroll = styled.div`
-  display: flex;
-  justify-content: center;
-  gap: 2.2rem;
+const ScrollContainer = styled.div`
+  overflow-x: auto;
   width: 100vw;
   max-width: none;
-  padding: 0 5vw 1.5rem 5vw;
+  padding: 0 5vw 2rem 5vw;
   scroll-snap-type: x mandatory;
-  /* 스크롤바 숨기기 */
+  cursor: grab;
+  user-select: none;
+
   &::-webkit-scrollbar {
     display: none;
   }
   scrollbar-width: none;
   -ms-overflow-style: none;
+`;
+
+const CardContainer = styled.div`
+  display: flex;
+  gap: 2.2rem;
+  padding: 20px 0;
+  overflow-y: visible;
 `;
 
 const Card = styled(motion.div)`
@@ -118,20 +111,22 @@ const Card = styled(motion.div)`
   border-radius: 22px;
   box-shadow: 0 8px 32px rgba(31, 38, 135, 0.13);
   padding: 2rem;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   transition: box-shadow 0.3s, transform 0.3s;
   cursor: pointer;
   scroll-snap-align: center;
+  margin: 10px;
   z-index: 1;
+
   &:hover {
     transform: scale(1.06);
     z-index: 10;
     box-shadow: 0 16px 40px 0 rgba(31, 38, 135, 0.2);
   }
 `;
+
 const CardTitle = styled.h3`
   font-size: 1.27rem;
   font-weight: 700;
@@ -170,7 +165,20 @@ const Period = styled.div`
 
 const ProjectAccordion = () => {
   const [selected, setSelected] = useState<number | null>(null);
-  const { ref, mouseHandlers, touchHandlers } = useHorizontalDragScroll();
+  const { ref, mouseHandlers } = useHorizontalDragScroll();
+  const clickDisabled = useRef(false);
+
+  const handleCardClick = (id: number) => {
+    if (!clickDisabled.current) {
+      setSelected(id);
+    }
+    clickDisabled.current = false;
+  };
+
+  const handleMouseUpWrapper = () => {
+    const wasDragging = mouseHandlers.onMouseUp();
+    clickDisabled.current = wasDragging;
+  };
 
   return (
     <Section>
@@ -185,24 +193,29 @@ const ProjectAccordion = () => {
             exit={{ opacity: 0, y: -40 }}
             transition={{ duration: 1 }}
           >
-            <HorizontalScroll ref={ref} {...mouseHandlers} {...touchHandlers}>
-              {projects.map((project) => (
-                <Card
-                  key={project.id}
-                  whileHover={{ scale: 1.03 }}
-                  onClick={() => setSelected(project.id)}
-                >
-                  <CardTitle>{project.title}</CardTitle>
-                  <CardDesc>{project.summary}</CardDesc>
-                  <BadgeList>
-                    {project.overview.stack.split(",").map((tech, i) => (
-                      <Badge key={i}>{tech.trim()}</Badge>
-                    ))}
-                  </BadgeList>
-                  <Period>{project.overview.period}</Period>
-                </Card>
-              ))}
-            </HorizontalScroll>
+            <ScrollContainer
+              ref={ref}
+              {...mouseHandlers}
+              onMouseUp={handleMouseUpWrapper}
+            >
+              <CardContainer>
+                {projects.map((project) => (
+                  <Card
+                    key={project.id}
+                    onClick={() => handleCardClick(project.id)}
+                  >
+                    <CardTitle>{project.title}</CardTitle>
+                    <CardDesc>{project.summary}</CardDesc>
+                    <BadgeList>
+                      {project.overview.stack.split(",").map((tech, i) => (
+                        <Badge key={i}>{tech.trim()}</Badge>
+                      ))}
+                    </BadgeList>
+                    <Period>{project.overview.period}</Period>
+                  </Card>
+                ))}
+              </CardContainer>
+            </ScrollContainer>
           </motion.div>
         ) : (
           <Project
@@ -215,4 +228,5 @@ const ProjectAccordion = () => {
     </Section>
   );
 };
+
 export default ProjectAccordion;
