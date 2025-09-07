@@ -1,7 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import Profile from "./components/profile/profile";
-import ProjectAccordion from "./components/ProjectAccordion";
+import ProjectAccordion from "./components/project/ProjectAccordion";
 import styled from "styled-components";
 
 const Background = styled.div`

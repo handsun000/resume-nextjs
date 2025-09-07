@@ -51,7 +51,7 @@ interface ProjectProps {
   onClose: () => void;
 }
 
-export default function Project({ project, onClose }: ProjectProps) {
+export default function Projects({ project, onClose }: ProjectProps) {
   const [page, setPage] = useState(0);
   const [showNav, setShowNav] = useState(true);
   const projectRef = useRef<HTMLDivElement | null>(null);

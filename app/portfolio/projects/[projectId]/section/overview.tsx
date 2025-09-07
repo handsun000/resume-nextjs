@@ -189,7 +189,12 @@ export default function Overview({ data }: { data: Overview }) {
                         <strong>대상:</strong> {data.target}
                       </li>
                       <li>
-                        <strong>핵심기능:</strong> {data.features}
+                        <strong>핵심기능:</strong> {data.features.map((feature, index) => (
+                          <span key={index}>
+                            {feature}
+                            {index !== data.features.length-1? ", " : ""}
+                          </span>
+                        ))}
                       </li>
                     </ul>
                   </td>
@@ -198,7 +203,7 @@ export default function Overview({ data }: { data: Overview }) {
                   <th>사용기술</th>
                   <td colSpan={3}>
                     <BadgeList>
-                      {data.stack.split(",").map((tech, i) => (
+                      {data.stack.map((tech, i) => (
                         <Badge key={i}>{tech.trim()}</Badge>
                       ))}
                     </BadgeList>
