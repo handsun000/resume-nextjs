@@ -1,60 +1,14 @@
-// ProjectAccordion.tsx
-
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import ProjectCard from "./ProjectCard";
 import { projects } from "@/types/data";
 import Projects from "../../projects/projects";
 
-function useHorizontalDragScroll() {
-  const ref = useRef<HTMLDivElement>(null);
-  const isDown = useRef(false);
-  const startX = useRef(0);
-  const scrollLeft = useRef(0);
-  const dragThreshold = 5; // 5px 이상 이동하면 드래그로 판단
-  const isDragging = useRef(false);
-
-  const onMouseDown = (e: React.MouseEvent) => {
-    isDown.current = true;
-    startX.current = e.pageX - (ref.current?.offsetLeft ?? 0);
-    scrollLeft.current = ref.current?.scrollLeft ?? 0;
-    isDragging.current = false;
-    document.body.style.cursor = "grabbing";
-  };
-
-  const onMouseMove = (e: React.MouseEvent) => {
-    if (!isDown.current) return;
-    e.preventDefault();
-
-    const x = e.pageX - (ref.current?.offsetLeft ?? 0);
-    const walk = (x - startX.current) * 1.2;
-
-    if (Math.abs(walk) > dragThreshold) {
-      isDragging.current = true;
-      if (ref.current) ref.current.scrollLeft = scrollLeft.current - walk;
-    }
-  };
-
-  const onMouseUp = () => {
-    isDown.current = false;
-    document.body.style.cursor = "";
-    return isDragging.current;
-  };
-
-  return {
-    ref,
-    mouseHandlers: {
-      onMouseDown,
-      onMouseMove,
-      onMouseUp,
-    },
-    onMouseUpHandler: onMouseUp,
-    isDragging: isDragging.current,
-  };
-}
+const AUTO_SCROLL_PADDING = 80;    // 좌우 끝 감지 영역 (px)
+const AUTO_SCROLL_SPEED = 30;      // 스크롤 속도(px per tick)
 
 const Section = styled.section`
   min-height: 100vh;
@@ -64,7 +18,6 @@ const Section = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: none;
 `;
 
 const Title = styled.h2`
@@ -89,7 +42,6 @@ const ScrollContainer = styled.div`
   max-width: none;
   padding: 0 5vw 2rem 5vw;
   scroll-snap-type: x mandatory;
-  cursor: grab;
   user-select: none;
 
   &::-webkit-scrollbar {
@@ -103,25 +55,71 @@ const CardContainer = styled.div`
   display: flex;
   gap: 2.2rem;
   padding: 20px 0;
+  min-width: max-content;
   overflow-y: visible;
 `;
 
 const ProjectAccordion = () => {
   const [selected, setSelected] = useState<number | null>(null);
-  const { ref, mouseHandlers, onMouseUpHandler } = useHorizontalDragScroll();
-  const clickDisabled = useRef(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const autoScrollInterval = useRef<NodeJS.Timeout | null>(null);
 
+  // 카드 클릭
   const handleCardClick = (id: number) => {
-    if (!clickDisabled.current) {
-      setSelected(id);
-    }
-    clickDisabled.current = false;
+    setSelected(id);
   };
+  console.log(ref);
 
-  const handleMouseUpWrapper = () => {
-    const wasDragging = onMouseUpHandler();
-    clickDisabled.current = wasDragging;
-  };
+  // 마우스 위치로 자동스크롤
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!ref.current) return;
+      const { clientX } = e;
+      const { left, right } = ref.current.getBoundingClientRect();
+
+      // 왼쪽 끝 감지
+      if (clientX - left < AUTO_SCROLL_PADDING) {
+        if (!autoScrollInterval.current) {
+          autoScrollInterval.current = setInterval(() => {
+            if (ref.current) {
+              ref.current.scrollLeft = Math.max(ref.current.scrollLeft - AUTO_SCROLL_SPEED, 0);
+              console.log("scrollLeft:", ref.current.scrollLeft);
+            }
+          }, 16);
+        }
+        console.log("left = " + autoScrollInterval.current);
+        return;
+      }
+      // 오른쪽 끝 감지
+      if (right - clientX < AUTO_SCROLL_PADDING) {
+        if (!autoScrollInterval.current) {
+          autoScrollInterval.current = setInterval(() => {
+            if (ref.current) {
+              const maxScrollLeft = ref.current.scrollWidth - ref.current.clientWidth;
+              ref.current.scrollLeft = Math.min(ref.current.scrollLeft + AUTO_SCROLL_SPEED, maxScrollLeft);
+            }
+          }, 16);
+        }
+        console.log("right = " +autoScrollInterval.current);
+        return;
+      }
+      // 중앙에서는 멈춤
+      if (autoScrollInterval.current) {
+        clearInterval(autoScrollInterval.current);
+        autoScrollInterval.current = null;
+      }
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      if (autoScrollInterval.current) {
+        clearInterval(autoScrollInterval.current);
+        autoScrollInterval.current = null;
+      }
+    };
+  }, []);
 
   return (
     <Section>
@@ -136,11 +134,7 @@ const ProjectAccordion = () => {
             exit={{ opacity: 0, y: -40 }}
             transition={{ duration: 1 }}
           >
-            <ScrollContainer
-              ref={ref}
-              {...mouseHandlers}
-              onMouseUp={handleMouseUpWrapper}
-            >
+            <ScrollContainer ref={ref}>
               <CardContainer>
                 {projects.map((project) => (
                   <ProjectCard
@@ -150,7 +144,7 @@ const ProjectAccordion = () => {
                       image: project.overview.image,
                       title: project.title,
                       summary: project.summary,
-                      stack: project.overview.stack.map((s) => s.trim()),
+                      stack: project.overview.stack,
                       period: project.overview.period,
                     }}
                     onClick={() => handleCardClick(project.id)}
