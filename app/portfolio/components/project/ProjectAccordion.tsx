@@ -1,14 +1,14 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import ProjectCard from "./ProjectCard";
 import { projects } from "@/types/data";
 import Projects from "../../projects/projects";
 
-const AUTO_SCROLL_PADDING = 80;    // 좌우 끝 감지 영역 (px)
-const AUTO_SCROLL_SPEED = 30;      // 스크롤 속도(px per tick)
+const AUTO_SCROLL_PADDING = 180;
+const AUTO_SCROLL_SPEED = 20;
 
 const Section = styled.section`
   min-height: 100vh;
@@ -41,7 +41,6 @@ const ScrollContainer = styled.div`
   width: 100vw;
   max-width: none;
   padding: 0 5vw 2rem 5vw;
-  scroll-snap-type: x mandatory;
   user-select: none;
 
   &::-webkit-scrollbar {
@@ -61,65 +60,63 @@ const CardContainer = styled.div`
 
 const ProjectAccordion = () => {
   const [selected, setSelected] = useState<number | null>(null);
-  const ref = useRef<HTMLDivElement>(null);
-  const autoScrollInterval = useRef<NodeJS.Timeout | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  // 카드 클릭
   const handleCardClick = (id: number) => {
     setSelected(id);
   };
-  console.log(ref);
 
-  // 마우스 위치로 자동스크롤
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!ref.current) return;
-      const { clientX } = e;
-      const { left, right } = ref.current.getBoundingClientRect();
+  // CardContainer 내부에 마우스가 위치할 시 자동 스크롤 시작
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!scrollRef.current) return;
+    const rect = scrollRef.current.getBoundingClientRect();
+    const mouseX = e.clientX;
 
-      // 왼쪽 끝 감지
-      if (clientX - left < AUTO_SCROLL_PADDING) {
-        if (!autoScrollInterval.current) {
-          autoScrollInterval.current = setInterval(() => {
-            if (ref.current) {
-              ref.current.scrollLeft = Math.max(ref.current.scrollLeft - AUTO_SCROLL_SPEED, 0);
-              console.log("scrollLeft:", ref.current.scrollLeft);
-            }
-          }, 16);
-        }
-        console.log("left = " + autoScrollInterval.current);
-        return;
+    if (mouseX - rect.left < AUTO_SCROLL_PADDING) {
+      if (!intervalRef.current) {
+        intervalRef.current = setInterval(() => {
+          if (scrollRef.current) {
+            scrollRef.current.scrollLeft = Math.max(
+              scrollRef.current.scrollLeft - AUTO_SCROLL_SPEED,
+              0
+            );
+          }
+        }, 16);
       }
-      // 오른쪽 끝 감지
-      if (right - clientX < AUTO_SCROLL_PADDING) {
-        if (!autoScrollInterval.current) {
-          autoScrollInterval.current = setInterval(() => {
-            if (ref.current) {
-              const maxScrollLeft = ref.current.scrollWidth - ref.current.clientWidth;
-              ref.current.scrollLeft = Math.min(ref.current.scrollLeft + AUTO_SCROLL_SPEED, maxScrollLeft);
-            }
-          }, 16);
-        }
-        console.log("right = " +autoScrollInterval.current);
-        return;
-      }
-      // 중앙에서는 멈춤
-      if (autoScrollInterval.current) {
-        clearInterval(autoScrollInterval.current);
-        autoScrollInterval.current = null;
-      }
-    };
+      return;
+    }
 
-    document.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      if (autoScrollInterval.current) {
-        clearInterval(autoScrollInterval.current);
-        autoScrollInterval.current = null;
+    if (rect.right - mouseX < AUTO_SCROLL_PADDING) {
+      if (!intervalRef.current) {
+        intervalRef.current = setInterval(() => {
+          if (scrollRef.current) {
+            const maxScroll =
+              scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
+            scrollRef.current.scrollLeft = Math.min(
+              scrollRef.current.scrollLeft + AUTO_SCROLL_SPEED,
+              maxScroll
+            );
+          }
+        }, 16);
       }
-    };
-  }, []);
+      return;
+    }
+
+    // 중앙 영역에서 마우스가 있을 땐 스크롤 멈춤
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  // CardContainer를 벗어나면 자동 스크롤 중지
+  const handleMouseLeave = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
 
   return (
     <Section>
@@ -134,7 +131,11 @@ const ProjectAccordion = () => {
             exit={{ opacity: 0, y: -40 }}
             transition={{ duration: 1 }}
           >
-            <ScrollContainer ref={ref}>
+            <ScrollContainer
+                            ref={scrollRef}
+                onMouseMove={handleMouseMove}
+                onMouseLeave={handleMouseLeave}
+                >
               <CardContainer>
                 {projects.map((project) => (
                   <ProjectCard
