@@ -3,13 +3,16 @@ import styled from "styled-components";
 import type { Implementation } from "@/types/project";
 
 const CenterWrap = styled.div`
-  min-height: 100vh;
-  width: 100vw;
+  width: 100%;            /* 부모 Card 폭 내 최대한 채움 */
+  min-height: 100%;       /* 부모 Card 높이에 맞춤 */
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  flex-direction: column; /* 열 방향 정렬 (기본) */
+  align-items: flex-start; /* 좌측 정렬 */
+  justify-content: flex-start;
   background: transparent;
-  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 0;             /* 카드가 패딩 포함하므로 패딩 제거 */
+  overflow-y: visible;    /* 카드가 스크롤 처리하므로 내부 스크롤 필요 없음 */
 `;
 
 const Card = styled.div`
@@ -19,14 +22,11 @@ const Card = styled.div`
   padding: 2.5rem 2.5rem 2.2rem 2.5rem;
   max-width: 950px;
   width: 100%;
-  margin: 4vh 0;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  max-height: 90vh;
   overflow-y: auto;
   @media (max-width: 900px) {
-    padding: 1.5rem 0.7rem;
     max-height: unset;
   }
 `;

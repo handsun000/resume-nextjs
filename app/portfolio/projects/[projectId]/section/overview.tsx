@@ -3,23 +3,23 @@ import styled from "styled-components";
 import type { Overview } from "@/types/project";
 
 const OverviewWrap = styled.div`
-  width: 100vw;
-  min-height: 100vh;
+  width: 100%;
+  min-height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start; /* 필요 시 flex-start 혹은 center */
+  justify-content: flex-start; /* 콘텐츠 정렬 조정 */
   background: transparent;
   box-sizing: border-box;
-  padding: 4vh 0;
+  padding: 0; /* 부모 카드가 이미 패딩 있음 */
 `;
+
 
 const ContentBox = styled.div`
   background: #fff;
   border-radius: 18px;
   box-shadow: 0 4px 32px rgba(31, 38, 135, 0.09);
-  max-width: 720px;
   width: 100%;
-  margin: 0 2vw;
+  height: 100%;
   padding: 2rem 2.2rem;
   overflow: hidden;
   display: flex;
