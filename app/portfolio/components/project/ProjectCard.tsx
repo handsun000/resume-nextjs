@@ -88,7 +88,11 @@ interface ProjectCardProps {
 const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
   return (
     <Card onClick={onClick} role="button" tabIndex={0}>
-      {project.image && <Img src={project.image} alt={`${project.title} 대표 이미지`} />}
+      {project.image && <Img  src={`${
+                            process.env.NODE_ENV === "production"
+                              ? "/resume-nextjs"
+                              : ""
+                          }${project.image}`} alt={`${project.title} 대표 이미지`} />}
       <Title>{project.title}</Title>
       <Description>{project.summary}</Description>
       <StackList>

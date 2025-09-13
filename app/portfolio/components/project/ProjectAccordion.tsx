@@ -1,11 +1,15 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef} from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import ProjectCard from "./ProjectCard";
 import { projects } from "@/types/data";
-import Projects from "../../projects/projects";
+import Overview from "../../projects/[projectId]/section/overview";
+import Implementation from "../../projects/[projectId]/section/implementation";
+import TroubleShooting from "../../projects/[projectId]/section/troubleShooting";
+import ResultReview from "../../projects/[projectId]/section/resultreview";
+import { FaTimes } from "react-icons/fa";
 
 const AUTO_SCROLL_PADDING = 180;
 const AUTO_SCROLL_SPEED = 20;
@@ -58,16 +62,121 @@ const CardContainer = styled.div`
   overflow-y: visible;
 `;
 
-const ProjectAccordion = () => {
+const Layout = styled.div`
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+`;
+
+const SideNav = styled.nav`
+  width: 240px;
+  min-width: 240px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  padding: 68px 16px 32px 24px;
+  gap: 16px;
+  border-right: 1.5px solid #e6edea;
+  box-shadow: 1px 0 18px rgb(0 0 0 / 0.05);
+  background: #f9faf8;
+`;
+
+const SectionLabel = styled.div`
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: #22af6e;
+  padding-left: 8px;
+  margin-bottom: 8px;
+`;
+
+const NavItem = styled.button.withConfig({
+  shouldForwardProp: (prop) => prop !== "active" && prop !== "isProject"
+})<{ active: boolean; isProject?: boolean }>`
+  border: none;
+  background: ${({ active, isProject }) => {
+    if (active && isProject) return "#d3f2d7";
+    if (active) return "#eaf9f2";
+    return "transparent";
+  }};
+  color: ${({ active, isProject }) => (active ? "#22af6e" : isProject ? "#5cae79" : "#7d8b84")};
+  font-size: ${({ isProject }) => (isProject ? "1.05rem" : "1.17rem")};
+  font-weight: ${({ active }) => (active ? 700 : 400)};
+  text-align: left;
+  padding: ${({ isProject }) => (isProject ? "10px 16px" : "17px 0 17px 16px")};
+  width: 100%;
+  border-radius: ${({ isProject }) => (isProject ? "8px" : "10px 0 0 10px")};
+  cursor: pointer;
+  box-shadow: ${({ active }) => (active ? "0 2px 8px #c1e7d2 inset" : "none")};
+  transition: background 0.16s, color 0.15s;
+  letter-spacing: 0.01em;
+  &:hover {
+    background: ${({ active }) => (active ? null : "#ebf6f2")};
+    color: #22af6e;
+  }
+`;
+
+const Content = styled.div`
+  flex: 1;
+  min-width: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 24px 24px 24px;
+`;
+
+const Card = styled.div`
+  width: 860px;
+  height: 100%;
+  max-width: 98vw;
+  background: #fff;
+  border-radius: 17px;
+  box-shadow: 0 6px 32px rgba(31, 38, 135, 0.1);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  padding: 52px 44px 44px 48px;
+  overflow-y: auto;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 28px;
+  right: 36px;
+  z-index: 100;
+  background: #22af6e;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(34, 175, 110, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  &:hover {
+    background: #12955a;
+  }
+  svg {
+    pointer-events: none;
+  }
+`;
+
+
+export default function ProjectAccordion() {
   const [selected, setSelected] = useState<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleCardClick = (id: number) => {
-    setSelected(id);
-  };
+  // 프로젝트 및 상세 섹션 상태
+  const [currentProjectIdx, setCurrentProjectIdx] = useState<number | null>(null);
+  const [section, setSection] = useState(0);
 
-  // CardContainer 내부에 마우스가 위치할 시 자동 스크롤 시작
+  // 자동 스크롤 처리 (이전 코드 유지)
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!scrollRef.current) return;
     const rect = scrollRef.current.getBoundingClientRect();
@@ -103,14 +212,12 @@ const ProjectAccordion = () => {
       return;
     }
 
-    // 중앙 영역에서 마우스가 있을 땐 스크롤 멈춤
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
   };
 
-  // CardContainer를 벗어나면 자동 스크롤 중지
   const handleMouseLeave = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -118,12 +225,16 @@ const ProjectAccordion = () => {
     }
   };
 
-  return (
-    <Section>
-      <Title>프로젝트</Title>
-      <SubTitle>프로젝트를 소개합니다.</SubTitle>
-      <AnimatePresence>
-        {selected === null ? (
+  // 프로젝트 찾기 (선택된 경우)
+  const currentProject = selected !== null ? projects.find((p) => p.id === selected) : null;
+
+  if (selected === null) {
+    // 프로젝트 리스트 뷰
+    return (
+      <Section>
+        <Title>프로젝트</Title>
+        <SubTitle>프로젝트를 소개합니다.</SubTitle>
+        <AnimatePresence>
           <motion.div
             key="list"
             initial={{ opacity: 0, y: 40 }}
@@ -131,13 +242,9 @@ const ProjectAccordion = () => {
             exit={{ opacity: 0, y: -40 }}
             transition={{ duration: 1 }}
           >
-            <ScrollContainer
-                            ref={scrollRef}
-                onMouseMove={handleMouseMove}
-                onMouseLeave={handleMouseLeave}
-                >
+            <ScrollContainer ref={scrollRef} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
               <CardContainer>
-                {projects.map((project) => (
+                {projects.map((project, idx) => (
                   <ProjectCard
                     key={project.id}
                     project={{
@@ -148,22 +255,74 @@ const ProjectAccordion = () => {
                       stack: project.overview.stack,
                       period: project.overview.period,
                     }}
-                    onClick={() => handleCardClick(project.id)}
+                    onClick={() => {
+                      setCurrentProjectIdx(idx);
+                      setSection(0);
+                      setSelected(project.id);
+                    }}
                   />
                 ))}
               </CardContainer>
             </ScrollContainer>
           </motion.div>
-        ) : (
-          <Projects
-            key="slider"
-            project={projects.find((p) => p.id === selected)!}
-            onClose={() => setSelected(null)}
-          />
-        )}
-      </AnimatePresence>
-    </Section>
-  );
-};
+        </AnimatePresence>
+      </Section>
+    );
+  }
 
-export default ProjectAccordion;
+  return (
+    <Layout>
+      <SideNav>
+        <SectionLabel>프로젝트 목록</SectionLabel>
+        {projects.map((proj, idx) => (
+          <NavItem
+            key={proj.id}
+            active={idx === currentProjectIdx}
+            isProject
+            onClick={() => {
+              setCurrentProjectIdx(idx);
+              setSection(0);
+              setSelected(proj.id);
+            }}
+          >
+            {proj.title}
+          </NavItem>
+        ))}
+        <SectionLabel>상세 섹션</SectionLabel>
+        {[
+          { label: "개요" },
+          { label: "구현" },
+          { label: "문제해결" },
+          { label: "회고" },
+        ].map((item, idx) => (
+          <NavItem key={item.label} active={section === idx} onClick={() => setSection(idx)}>
+            {item.label}
+          </NavItem>
+        ))}
+      </SideNav>
+      <Content>
+        <Card>
+          <CloseButton onClick={() => setSelected(null)}>
+            <FaTimes />
+          </CloseButton>
+          <AnimatePresence mode="wait">
+            {currentProject && (
+              <motion.div
+                key={section}
+                initial={{ opacity: 0, x: 100 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -100 }}
+                transition={{ duration: 0.4 }}
+              >
+                {section === 0 && <Overview data={currentProject.overview} />}
+                {section === 1 && <Implementation data={currentProject.implementation} />}
+                {section === 2 && <TroubleShooting data={currentProject.troubleshootingList} />}
+                {section === 3 && <ResultReview data={currentProject.resultreview} />}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </Card>
+      </Content>
+    </Layout>
+  );
+}

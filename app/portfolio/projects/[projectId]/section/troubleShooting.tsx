@@ -2,26 +2,15 @@ import React from "react";
 import styled from "styled-components";
 import type { TroubleshootingList } from "@/types/project";
 
-const CenterWrap = styled.div`
-  min-height: 100vh;
-  width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Card = styled.div`
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 22px;
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.13);
-  padding: 2.5rem 2.5rem 2rem 2.5rem;
-  max-width: 700px;
+// 부모(Card) 내부 전용 래퍼: min/max 제한․뷰포트 단위 모두 제거!
+const Wrap = styled.div`
   width: 100%;
-  max-height: 80vh;
-  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 0;
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  background: transparent;
 `;
 
 const Title = styled.h2`
@@ -71,29 +60,26 @@ export default function TroubleShooting({
 }: {
   data: TroubleshootingList;
 }) {
-  console.log(data);
   return (
-    <CenterWrap>
-      <Card>
-        <Title>트러블 슈팅</Title>
-        {data.map((item, idx) => (
-          <Item key={idx}>
-            {item.feature && <Feature>{item.feature}</Feature>}
-            <Section>
-              <SubTitle>문제 상황</SubTitle>
-              <Content>{item.problem}</Content>
-            </Section>
-            <Section>
-              <SubTitle>원인 분석</SubTitle>
-              <Content>{item.cause}</Content>
-            </Section>
-            <Section>
-              <SubTitle>해결 방법</SubTitle>
-              <Content>{item.solution}</Content>
-            </Section>
-          </Item>
-        ))}
-      </Card>
-    </CenterWrap>
+    <Wrap>
+      <Title>트러블 슈팅</Title>
+      {data.map((item, idx) => (
+        <Item key={idx}>
+          {item.feature && <Feature>{item.feature}</Feature>}
+          <Section>
+            <SubTitle>문제 상황</SubTitle>
+            <Content>{item.problem}</Content>
+          </Section>
+          <Section>
+            <SubTitle>원인 분석</SubTitle>
+            <Content>{item.cause}</Content>
+          </Section>
+          <Section>
+            <SubTitle>해결 방법</SubTitle>
+            <Content>{item.solution}</Content>
+          </Section>
+        </Item>
+      ))}
+    </Wrap>
   );
 }

@@ -3,32 +3,13 @@ import styled from "styled-components";
 import type { Implementation } from "@/types/project";
 
 const CenterWrap = styled.div`
-  width: 100%;            /* 부모 Card 폭 내 최대한 채움 */
-  min-height: 100%;       /* 부모 Card 높이에 맞춤 */
-  display: flex;
-  flex-direction: column; /* 열 방향 정렬 (기본) */
-  align-items: flex-start; /* 좌측 정렬 */
-  justify-content: flex-start;
-  background: transparent;
-  box-sizing: border-box;
-  padding: 0;             /* 카드가 패딩 포함하므로 패딩 제거 */
-  overflow-y: visible;    /* 카드가 스크롤 처리하므로 내부 스크롤 필요 없음 */
-`;
-
-const Card = styled.div`
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 22px;
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.13);
-  padding: 2.5rem 2.5rem 2.2rem 2.5rem;
-  max-width: 950px;
   width: 100%;
+  box-sizing: border-box;
+  padding: 0;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  overflow-y: auto;
-  @media (max-width: 900px) {
-    max-height: unset;
-  }
+  background: transparent;
 `;
 
 const Title = styled.h2`
@@ -170,7 +151,6 @@ export default function Implementation({ data }: { data: Implementation }) {
 
   return (
     <CenterWrap>
-      <Card>
         <Title>구현 기능 및 개발과정</Title>
         {data.features.map((feature, idx) => {
           // summary가 없으면 description 앞부분 80자 자동 요약
@@ -241,7 +221,6 @@ export default function Implementation({ data }: { data: Implementation }) {
             </FeatureSection>
           );
         })}
-      </Card>
     </CenterWrap>
   );
 }

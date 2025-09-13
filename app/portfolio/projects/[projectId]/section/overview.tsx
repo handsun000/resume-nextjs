@@ -15,21 +15,8 @@ const OverviewWrap = styled.div`
 
 
 const ContentBox = styled.div`
-  background: #fff;
-  border-radius: 18px;
-  box-shadow: 0 4px 32px rgba(31, 38, 135, 0.09);
-  width: 100%;
-  height: 100%;
-  padding: 2rem 2.2rem;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  @media (max-width: 900px) {
-    max-width: 98vw;
-    padding: 1.2rem 1rem;
-    gap: 1.2rem;
-  }
 `;
 
 const TableTitle = styled.h2`
