@@ -60,18 +60,21 @@ const Right = styled.div`
 `;
 
 const ProfileImage = styled.div`
-  width: 200px;
-  height: 200px;
+  width: 300px;
+  height: 300px;
   border-radius: 50%;
+  overflow: hidden;
   background: #fff;
-  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.14);
-  margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
-  color: #bdbdbd;
-  font-weight: 600;
+`;
+
+const Img = styled.img`
+  width: 85%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 `;
 
 const Name = styled.h1`
@@ -205,7 +208,14 @@ export default function Profile() {
       <ContentWrapper>
         <Left>
           <div>
-            <ProfileImage>프로필 이미지</ProfileImage>
+            <ProfileImage>
+              <Img
+                src={`${process.env.NODE_ENV === "production"
+                  ? "/resume-nextjs"
+                  : ""
+                  }/assets/image/profile/resume_photo.jpg`}
+              />
+            </ProfileImage>
             <Name>SON JIN YEONG</Name>
             <Slogan>끝까지, 함께, 더 나은 답을 찾는 개발자</Slogan>
           </div>
