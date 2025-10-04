@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import type { Overview } from "@/types/project";
 
-const OverviewWrap = styled.div`
+const Wrapper = styled.section`
   width: 100%;
   min-height: 100%;
   display: flex;
@@ -12,95 +12,89 @@ const OverviewWrap = styled.div`
   box-sizing: border-box;
 `;
 
-const ContentBox = styled.div`
+const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2.3rem;
+  gap: 2.4rem;
   width: 100%;
 `;
 
-const TitleArea = styled.div`
-  margin-bottom: 1rem;
+const Header = styled.header`
   display: flex;
   flex-direction: column;
-  gap: 0.7rem;
+  gap: 0.8rem;
 `;
 
-const TableTitle = styled.h2`
-  font-size: 1.7rem;
-  color: #243a6b;
-  font-weight: 900;
+const Title = styled.h2`
   margin: 0;
+  font-size: 1.7rem;
+  font-weight: 900;
+  color: #243a6b;
   letter-spacing: 0.07em;
 `;
 
-const Summary = styled.p`
+const Description = styled.p`
+  margin: 0;
   color: #556192;
   font-size: 1.07rem;
-  margin: 0;
   font-weight: 600;
-  line-height: 1.71;
+  line-height: 1.7;
 `;
 
 const InfoTable = styled.table`
   width: 100%;
   border-collapse: separate;
   border-spacing: 0 0.65rem;
-  font-size: 1.07rem;
-  th, td {
-    padding: 0.6rem 1.1rem 0.6rem 0.7rem;
+  font-size: 1.05rem;
+
+  th,
+  td {
+    padding: 0.6rem 1rem;
     vertical-align: top;
-    background: #f8f9fc;
+    background: #f9f9fe;
   }
+
   th {
+    width: 110px;
     color: #4466a3;
     font-weight: 700;
     text-align: left;
-    width: 106px;
     background: #f3f6fd;
     border-radius: 8px 0 0 8px;
-    white-space: nowrap;
-    font-size: 1.09rem;
-    letter-spacing: 0.03em;
     border-right: 3px solid #d8e1fa;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
   }
+
   td {
     color: #242b36;
     background: #f9f9fe;
-    border-radius: 0 11px 11px 0;
+    border-radius: 0 10px 10px 0;
     white-space: pre-line;
-    font-size: 1.07rem;
   }
-  tr:not(:last-child) td, tr:not(:last-child) th {
+
+  tr:not(:last-child) td,
+  tr:not(:last-child) th {
     border-bottom: 1.5px dashed #e2e8f8;
   }
 `;
 
-const FeatureTagList = styled.div`
+const FeatureList = styled.div`
   display: flex;
-  gap: 0.44rem 0.9rem;
+  gap: 12px;
   flex-wrap: wrap;
-  margin-top: 0.1rem;
-`;
-
-const FeatureTag = styled.span`
-  display: inline-block;
-  background: linear-gradient(90deg, #f3eefd 60%, #e8f8fa 100%);
-  color: #5f38d6;
-  border-radius: 15px;
-  font-weight: bold;
+  font-weight: 600;
   font-size: 1.04rem;
-  padding: 0.38rem 1.18rem;
-  box-shadow: 0 1px 5px #ece8fd44;
-  border: 1.5px solid #cbc6f7;
-  letter-spacing: 0.01em;
+  color: #3a2d9e;
 `;
 
-const ListLabel = styled.span`
-  color: #38a190;
-  font-weight: 700;
+const FeatureItem = styled.span`
+  &:not(:last-child)::after {
+    content: "·";
+    color: #888;
+    margin-left: 12px;
+  }
 `;
-
 const BadgeList = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -113,31 +107,38 @@ const Badge = styled.span`
   padding: 0.36rem 1rem;
   border-radius: 13px;
   font-weight: 700;
-  font-size: 0.99rem;
+  font-size: 0.98rem;
   letter-spacing: 0.02em;
-  box-shadow: 0 1px 6px #d5dbfa66;
+  box-shadow: 0 1px 6px rgba(213, 219, 250, 0.4);
 `;
 
 const Url = styled.a`
   color: #3659ad;
   font-size: 1.03rem;
   word-break: break-all;
-  text-decoration: underline dotted;
   font-weight: 600;
+  text-decoration: underline dotted;
+  transition: color 0.2s ease, text-decoration 0.2s ease;
+
   &:hover {
     color: #296cbd;
     text-decoration: underline solid;
   }
 `;
 
-export default function Overview({ data }: { data: Overview }) {
+interface OverviewProps {
+  data: Overview;
+}
+
+export default function Overview({ data }: OverviewProps) {
   return (
-    <OverviewWrap>
-      <ContentBox>
-        <TitleArea>
-          <TableTitle>{data.title}</TableTitle>
-          {data.summary && <Summary>{data.summary}</Summary>}
-        </TitleArea>
+    <Wrapper>
+      <Container>
+        <Header>
+          <Title>{data.title}</Title>
+          {data.summary && <Description>{data.summary}</Description>}
+        </Header>
+
         <InfoTable>
           <tbody>
             <tr>
@@ -146,49 +147,63 @@ export default function Overview({ data }: { data: Overview }) {
               <th>참여인원</th>
               <td>{data.members}</td>
             </tr>
+
             <tr>
               <th>목적</th>
               <td colSpan={3}>{data.purpose}</td>
             </tr>
+
             <tr>
               <th>대상</th>
               <td colSpan={3}>{data.target}</td>
             </tr>
-<tr>
-  <th>주요 기능</th>
-  <td colSpan={3}>
-    <FeatureTagList>
-      {data.features.map((feature, i) => (
-        <FeatureTag key={i}>{feature}</FeatureTag>
-      ))}
-    </FeatureTagList>
-  </td>
-</tr>
+
             <tr>
-              <th>사용기술</th>
+              <th>주요 기능</th>
+              <td colSpan={3}>
+                <FeatureList>
+                  {data.features.map((feature, i) => (
+                    <FeatureItem key={i}>{feature}</FeatureItem>
+                  ))}
+                </FeatureList>
+              </td>
+            </tr>
+
+            <tr>
+              <th>사용 기술</th>
               <td colSpan={3}>
                 <BadgeList>
-                  {data.stack.map((tech, i) => (
-                    <Badge key={tech + i}>{tech}</Badge>
+                  {data.stack.map((tech, idx) => (
+                    <Badge key={`${tech}-${idx}`}>{tech}</Badge>
                   ))}
                 </BadgeList>
               </td>
             </tr>
+
             <tr>
               <th>역할</th>
               <td colSpan={3}>{data.role}</td>
             </tr>
+
             <tr>
               <th>링크</th>
               <td colSpan={3}>
-                {data.link
-                  ? <Url href={data.link} target="_blank" rel="noopener noreferrer">{data.link}</Url>
-                  : "없음"}
+                {data.link ? (
+                  <Url
+                    href={data.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {data.link}
+                  </Url>
+                ) : (
+                  "없음"
+                )}
               </td>
             </tr>
           </tbody>
         </InfoTable>
-      </ContentBox>
-    </OverviewWrap>
+      </Container>
+    </Wrapper>
   );
 }

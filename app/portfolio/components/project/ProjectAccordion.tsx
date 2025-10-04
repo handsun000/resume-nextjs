@@ -66,6 +66,7 @@ const Layout = styled.div`
   display: flex;
   width: 100vw;
   height: 100vh;
+  outline: none;
 `;
 
 const SideNav = styled.nav`
@@ -78,15 +79,15 @@ const SideNav = styled.nav`
   justify-content: flex-start;
   padding: 68px 16px 32px 24px;
   gap: 16px;
-  border-right: 1.5px solid #e6edea;
-  box-shadow: 1px 0 18px rgb(0 0 0 / 0.05);
-  background: #f9faf8;
+  border-right: 1.5px solid #e2e6ee;
+  box-shadow: 1px 0 18px rgba(36, 58, 107, 0.04); /* 네이비 그림자 */
+  background: #f7f8fa; /* 아주 밝은 네이비 라이트톤 */
 `;
 
 const SectionLabel = styled.div`
   font-weight: 700;
   font-size: 1.25rem;
-  color: #22af6e;
+  color: #243a6b; /* 네이비 블루 */
   padding-left: 8px;
   margin-bottom: 8px;
 `;
@@ -96,11 +97,12 @@ const NavItem = styled.button.withConfig({
 })<{ active: boolean; isProject?: boolean }>`
   border: none;
   background: ${({ active, isProject }) => {
-    if (active && isProject) return "#d3f2d7";
-    if (active) return "#eaf9f2";
+    if (active && isProject) return "#e7eaf3"; // 연한 블루그레이
+    if (active) return "#f1f3fa";
     return "transparent";
   }};
-  color: ${({ active, isProject }) => (active ? "#22af6e" : isProject ? "#5cae79" : "#7d8b84")};
+  color: ${({ active, isProject }) =>
+    active ? "#213e75" : isProject ? "#354979" : "#6a728c"};
   font-size: ${({ isProject }) => (isProject ? "1.05rem" : "1.17rem")};
   font-weight: ${({ active }) => (active ? 700 : 400)};
   text-align: left;
@@ -108,12 +110,13 @@ const NavItem = styled.button.withConfig({
   width: 100%;
   border-radius: ${({ isProject }) => (isProject ? "8px" : "10px 0 0 10px")};
   cursor: pointer;
-  box-shadow: ${({ active }) => (active ? "0 2px 8px #c1e7d2 inset" : "none")};
-  transition: background 0.16s, color 0.15s;
+  box-shadow: ${({ active }) =>
+    active ? "0 2px 7px #e4e8f5cc inset" : "none"};
+  transition: background 0.17s, color 0.15s;
   letter-spacing: 0.01em;
   &:hover {
-    background: ${({ active }) => (active ? null : "#ebf6f2")};
-    color: #22af6e;
+    background: ${({ active }) => (active ? null : "#f1f3fa")};
+    color: #213e75;
   }
 `;
 
@@ -124,7 +127,7 @@ const Content = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 36px 24px 24px 24px;
+  padding: 38px 24px 24px 24px;
 `;
 
 const Card = styled.div`
@@ -133,7 +136,7 @@ const Card = styled.div`
   max-width: 98vw;
   background: #fff;
   border-radius: 17px;
-  box-shadow: 0 6px 32px rgba(31, 38, 135, 0.1);
+  box-shadow: 0 6px 32px rgba(36, 58, 107, 0.08); /* 네이비 그림자 */
   display: flex;
   flex-direction: column;
   position: relative;
@@ -146,7 +149,7 @@ const CloseButton = styled.button`
   top: 28px;
   right: 36px;
   z-index: 100;
-  background: #22af6e;
+  background: #243a6b; /* 네이비 */
   color: white;
   border: none;
   border-radius: 50%;
@@ -154,12 +157,12 @@ const CloseButton = styled.button`
   height: 40px;
   font-size: 1.25rem;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgba(34, 175, 110, 0.2);
+  box-shadow: 0 2px 10px rgba(36, 58, 107, 0.11);
   display: flex;
   align-items: center;
   justify-content: center;
   &:hover {
-    background: #12955a;
+    background: #1d284d;
   }
   svg {
     pointer-events: none;
