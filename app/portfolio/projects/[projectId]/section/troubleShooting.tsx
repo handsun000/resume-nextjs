@@ -2,84 +2,97 @@ import React from "react";
 import styled from "styled-components";
 import type { TroubleshootingList } from "@/types/project";
 
-// 부모(Card) 내부 전용 래퍼: min/max 제한․뷰포트 단위 모두 제거!
-const Wrap = styled.div`
+const TroubleWrap = styled.div`
   width: 100%;
-  box-sizing: border-box;
-  padding: 0;
+  max-width: 680px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  background: transparent;
+  gap: 2.4rem;
 `;
 
 const Title = styled.h2`
   font-size: 2rem;
-  color: #3730a3;
+  color: #35499a;
   font-weight: 800;
-  margin-bottom: 1.7rem;
+  margin-bottom: 1.6rem;
+  letter-spacing: 1px;
   text-align: center;
-  flex-shrink: 0;
 `;
 
-const Item = styled.div`
-  margin-bottom: 2.2rem;
-  &:last-child {
-    margin-bottom: 0;
+const Item = styled.section`
+  background: #f6f8fc;
+  border-radius: 16px;
+  box-shadow: 0 2px 14px rgba(60, 110, 150, 0.08);
+  padding: 1.8rem 1.5rem 1.3rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  transition: box-shadow 0.22s;
+  &:hover {
+    box-shadow: 0 4px 24px rgba(60,110,150,0.13);
+    background: #f2f6ff;
   }
 `;
 
 const Feature = styled.div`
-  color: #6366f1;
+  color: #27b67a;
   font-weight: 700;
-  font-size: 1.12rem;
-  margin-bottom: 0.7rem;
+  font-size: 1.18rem;
+  margin-bottom: 0.3rem;
 `;
 
-const Section = styled.section`
-  margin-bottom: 0.7rem;
+const Row = styled.div`
+  display: flex;
+  gap: 1.5rem;
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+`;
+
+const Section = styled.div`
+  flex: 1;
 `;
 
 const SubTitle = styled.div`
-  color: #6366f1;
+  color: #308ce8;
   font-weight: 700;
-  font-size: 1.09rem;
+  font-size: 1.03rem;
   margin-bottom: 0.15rem;
 `;
 
 const Content = styled.p`
   color: #444;
-  font-size: 1.08rem;
-  text-align: left;
-  margin: 0 0 0.15rem 0;
-  line-height: 1.7;
+  font-size: 1.09rem;
+  line-height: 1.68;
+  margin: 0;
+  word-break: keep-all;
 `;
 
-export default function TroubleShooting({
-  data,
-}: {
-  data: TroubleshootingList;
-}) {
+export default function TroubleShooting({ data }: { data: TroubleshootingList }) {
   return (
-    <Wrap>
+    <TroubleWrap>
       <Title>트러블 슈팅</Title>
       {data.map((item, idx) => (
         <Item key={idx}>
           {item.feature && <Feature>{item.feature}</Feature>}
-          <Section>
-            <SubTitle>문제 상황</SubTitle>
-            <Content>{item.problem}</Content>
-          </Section>
-          <Section>
-            <SubTitle>원인 분석</SubTitle>
-            <Content>{item.cause}</Content>
-          </Section>
+          <Row>
+            <Section>
+              <SubTitle>문제 상황</SubTitle>
+              <Content>{item.problem}</Content>
+            </Section>
+            <Section>
+              <SubTitle>원인 분석</SubTitle>
+              <Content>{item.cause}</Content>
+            </Section>
+          </Row>
           <Section>
             <SubTitle>해결 방법</SubTitle>
             <Content>{item.solution}</Content>
           </Section>
         </Item>
       ))}
-    </Wrap>
+    </TroubleWrap>
   );
 }

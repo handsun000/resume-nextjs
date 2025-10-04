@@ -2,106 +2,62 @@ import React from "react";
 import styled from "styled-components";
 import type { ResultReview } from "@/types/project";
 
-// 부모 Card 내부 컨테이너: 전체 레이아웃과 규칙 맞춤
-const Wrap = styled.div`
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0;
+const ReviewWrap = styled.div`
+  max-width: 700px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  background: transparent;
+  gap: 2.3rem;
 `;
 
 const Title = styled.h2`
-  font-size: 2rem;
-  color: #3730a3;
-  font-weight: 800;
-  margin-bottom: 1.5rem;
-`;
-
-const StyledTable = styled.table`
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: transparent;
-`;
-
-const Th = styled.th`
-  width: 120px;
-  background: rgba(99, 102, 241, 0.08);
-  color: #3730a3;
-  font-weight: 800;
-  font-size: 1.1rem;
-  border: 1px solid rgba(99, 102, 241, 0.15);
-  border-right: none;
-  padding: 1rem 0.8rem;
+  font-size: 2.1rem;
+  color: #253a80;
+  font-weight: 900;
+  letter-spacing: 1.05px;
   text-align: center;
-  vertical-align: middle;
-  &:first-child {
-    border-top-left-radius: 8px;
-  }
-  &:last-child {
-    border-top-right-radius: 8px;
-    border-bottom-right-radius: 8px;
-  }
+  margin-bottom: 1.2rem;
 `;
 
-const Td = styled.td`
-  background: transparent;
-  color: #444;
+const Section = styled.section`
+  background: #f5f7fc;
+  border-radius: 17px;
+  box-shadow: 0 3px 14px rgba(48, 70, 130, 0.10);
+  padding: 1.5rem 1.8rem 1.0rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+`;
+
+const SubLabel = styled.h3`
+  color: #237abb;
   font-size: 1.1rem;
-  border: 1px solid rgba(99, 102, 241, 0.15);
-  border-left: none;
-  padding: 1rem 0.8rem;
-  vertical-align: top;
-  &:last-child {
-    border-bottom-right-radius: 8px;
-  }
+  font-weight: 700;
+  margin-bottom: 0.45rem;
 `;
 
-const Ul = styled.ul`
-  margin: 0;
-  padding-left: 1.2rem;
+const List = styled.ul`
+  margin: 0 0 1rem 1rem;
+  color: #295457;
+  font-size: 1.08rem;
+  line-height: 1.7;
   list-style-type: disc;
-`;
-
-const Li = styled.li`
-  margin-bottom: 0.7rem;
-  line-height: 1.6;
-  &:last-child {
-    margin-bottom: 0;
-  }
 `;
 
 export default function ResultReview({ data }: { data: ResultReview }) {
   return (
-    <Wrap>
-      <Title>프로젝트 결과/성과</Title>
-      <StyledTable>
-        <tbody>
-          <tr>
-            <Th>결과/성과</Th>
-            <Td>
-              <Ul>
-                {data.results.map((ach, idx) => (
-                  <Li key={idx}>{ach}</Li>
-                ))}
-              </Ul>
-            </Td>
-          </tr>
-          <tr>
-            <Th>리뷰</Th>
-            <Td>
-              <Ul>
-                {data.reviews.map((review, idx) => (
-                  <Li key={idx}>{review}</Li>
-                ))}
-              </Ul>
-            </Td>
-          </tr>
-        </tbody>
-      </StyledTable>
-    </Wrap>
+    <ReviewWrap>
+      <Title>프로젝트 결과 · 회고</Title>
+      <Section>
+        <SubLabel>성과/결과</SubLabel>
+        <List>
+          {data.results.map((result, i) => <li key={i}>{result}</li>)}
+        </List>
+        <SubLabel>주요 회고</SubLabel>
+        <List>
+          {data.reviews.map((review, i) => <li key={i}>{review}</li>)}
+        </List>
+      </Section>
+    </ReviewWrap>
   );
 }
