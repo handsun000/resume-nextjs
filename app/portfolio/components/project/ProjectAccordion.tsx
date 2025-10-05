@@ -70,19 +70,33 @@ const Layout = styled.div`
 `;
 
 const SideNav = styled.nav`
-  width: 240px;
+  width: 270px;
   min-width: 240px;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: stretch;
-  justify-content: flex-start;
   padding: 68px 16px 32px 24px;
-  gap: 16px;
   border-right: 1.5px solid #e2e6ee;
-  box-shadow: 1px 0 18px rgba(36, 58, 107, 0.04); /* 네이비 그림자 */
-  background: #f7f8fa; /* 아주 밝은 네이비 라이트톤 */
+  background: #f7f8fa;
+  box-shadow: 1px 0 18px rgba(36, 58, 107, 0.04);
 `;
+
+const ScrollableProjects = styled.div`
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 38vh;
+  overflow-y: auto;
+  margin-bottom: 1.3rem;
+
+  &::-webkit-scrollbar {
+    width: 7px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #dde1ea;
+    border-radius: 7px;
+  }
+`;
+
 
 const SectionLabel = styled.div`
   font-weight: 700;
@@ -276,31 +290,28 @@ export default function ProjectAccordion() {
 
   return (
     <Layout>
-      <SideNav>
+            <SideNav>
         <SectionLabel>프로젝트 목록</SectionLabel>
-        {projects.map((proj, idx) => (
-          <NavItem
-            key={proj.id}
-            active={idx === currentProjectIdx}
-            isProject
-            onClick={() => {
-              setCurrentProjectIdx(idx);
-              setSection(0);
-              setSelected(proj.id);
-            }}
-          >
-            {proj.title}
-          </NavItem>
-        ))}
+        <ScrollableProjects>
+          {projects.map((proj, idx) => (
+            <NavItem
+              key={proj.id}
+              active={idx === currentProjectIdx}
+              isProject
+              onClick={() => {
+                setCurrentProjectIdx(idx);
+                setSection(0);
+                setSelected(proj.id);
+              }}
+            >
+              {proj.title}
+            </NavItem>
+          ))}
+        </ScrollableProjects>
         <SectionLabel>상세 섹션</SectionLabel>
-        {[
-          { label: "개요" },
-          { label: "구현" },
-          { label: "문제해결" },
-          { label: "회고" },
-        ].map((item, idx) => (
-          <NavItem key={item.label} active={section === idx} onClick={() => setSection(idx)}>
-            {item.label}
+        {["개요", "구현", "문제해결", "회고"].map((label, idx) => (
+          <NavItem key={label} active={section === idx} onClick={() => setSection(idx)}>
+            {label}
           </NavItem>
         ))}
       </SideNav>
