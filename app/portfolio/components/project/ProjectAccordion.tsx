@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef} from "react";
+import React, { useState, useRef } from "react";
 import styled from "styled-components";
 import { motion, AnimatePresence } from "framer-motion";
 import ProjectCard from "./ProjectCard";
@@ -27,7 +27,7 @@ const Section = styled.section`
 const Title = styled.h2`
   font-size: 2.1rem;
   font-weight: 800;
-  color: #fff;
+  color: #333333;
   margin-top: 3rem;
   margin-bottom: 1.2rem;
   letter-spacing: 1px;
@@ -108,7 +108,7 @@ const SectionLabel = styled.div`
 
 const NavItem = styled.button.withConfig({
   shouldForwardProp: (prop) => prop !== "active" && prop !== "isProject"
-})<{ active: boolean; isProject?: boolean }>`
+}) <{ active: boolean; isProject?: boolean }>`
   border: none;
   background: ${({ active, isProject }) => {
     if (active && isProject) return "#e7eaf3"; // 연한 블루그레이
@@ -290,7 +290,7 @@ export default function ProjectAccordion() {
 
   return (
     <Layout>
-            <SideNav>
+      <SideNav>
         <SectionLabel>프로젝트 목록</SectionLabel>
         <ScrollableProjects>
           {projects.map((proj, idx) => (
