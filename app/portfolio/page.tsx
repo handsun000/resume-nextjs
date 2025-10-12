@@ -1,8 +1,8 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
 import Profile from "./components/profile/profile";
-import ProjectAccordion from "./components/project/ProjectAccordion";
 import styled from "styled-components";
+import Project from "./components/project";
 
 const Background = styled.div`
   min-height: 100vh;
@@ -56,7 +56,7 @@ const Portfolio = () => {
       <Profile />
       {/* 6. ref 위치 확인 */}
       <div ref={projectRef}>
-        <ProjectAccordion />
+        <Project />
       </div>
     </Background>
   );

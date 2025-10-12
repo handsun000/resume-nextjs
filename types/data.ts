@@ -219,7 +219,7 @@ Kafka나 RabbitMQ 같은 메시지 브로커도 고려했지만,
       },
     ],
     resultreview: {
-results: [
+      results: [
         "네이버, 카카오, 구글 소셜 로그인 도입으로 회원가입 절차를 간소화하고, 사용자 접근성을 향상시킴",
         "SSE + Redis Pub/Sub 적용으로 알림 기능의 실시간성 및 안정성 확보",
         "사용자 간 팔로우/팔로워, 추천 시스템을 통해 활발한 독서 커뮤니티 형성",
@@ -331,6 +331,118 @@ results: [
         "결제와 주문, 배송 상태 관리 등 실제 서비스 운영에 필요한 전 과정을 직접 경험하며, 실무적인 문제 해결 능력이 크게 향상되었습니다.",
         "입력값 검증, 실시간 알림, 관리자 권한 분리 등 실제 사용자와 운영자를 모두 고려한 설계와 구현의 중요성을 배웠습니다.",
         "프로젝트를 통해 사용자 경험을 개선하고, 서비스의 신뢰성을 높이는 다양한 방법을 고민해볼 수 있었습니다.",
+      ],
+    },
+  },
+  {
+    id: 4,
+    title: "중고거래, 경매 시스템",
+    summary:
+      "기존의 단순한 중고거래 방식에 경매 기능을 접목하여, 사용자에게 더욱 차별화된 거래 경험을 제공합니다",
+    overview: {
+      image: "/assets/image/project/bidbuy/main.png",
+      title: "중고거래, 경매 시스템",
+      summary:
+        "기존의 단순한 중고거래 방식에 경매 기능을 접목하여, 사용자에게 더욱 차별화된 거래 경험을 제공합니다",
+      purpose:
+        "경매 기능을 통해 판매자가 최적의 조건에서 거래를 성사시킬 수 있도록 함",
+      target:
+        "투명하고 공정한 경쟁을 통해 원하는 상품을 합리적인 가격에 구매하고자 하는 사용자",
+      features: ["게시글 등록", "경매", "채팅", "알림", "결재"],
+      period: "2025.03 ~ 2025.04",
+      members: "5명",
+      stack: [
+        "Java",
+        "Kotlin",
+        "Spring Boot",
+        "MySQL",
+        "Redis",
+        "WebSocket",
+        "AWS",
+        "Docker",
+        "Swagger",
+        "NextJS",
+      ],
+      role: "채팅, 알림",
+      link: "https://github.com/handsun000/WEB3_4_JSGYY_BE",
+    },
+    process: {
+      architectureImg: "/assets/image/project/bidbuy/main.png",
+      erdImg: "/assets/image/project/bidbuy/erd.png",
+      uxImg: "/resume-nextjs/ux.png",
+      description:
+        "Spring Boot 기반의 REST API, MariaDB, Redis 캐시, AWS EC2 배포, CI/CD 파이프라인 구축 등",
+    },
+    implementation: {
+      features: [
+        {
+          title: "채팅 기능",
+          descriptionSummary:
+            "WebSocket 기반의 실시간 채팅 기능을 구현했습니다. 메시지가 즉시 전달되는 것과 확장성을 고려해 설계했습니다.",
+          descriptionFull: `채팅 기능은 실시간 양방향 통신과 메시지가 즉시 전달되는 것이 핵심이었기 때문에, Spring Boot 기반의 WebSocket 서버와 STOMP 프로토콜을 활용해 구현했습니다.
+
+WebSocket을 선택한 이유는, 클라이언트(브라우저)와 서버가 하나의 연결로 직접 실시간으로 메시지를 주고받을 수 있기 때문입니다.
+SSE, HTTP 폴링 방식보다 훨씬 빠르고, 지연 없이 동작하는 점이 큰 장점이었습니다.
+
+여러 서버 인스턴스 간 메시지 동기화를 위해 메시지 브로커로 Redis Pub/Sub을 도입했습니다. Kafka나 RabbitMQ는 대규모 데이터 스트리밍이나 복잡한 시스템 간 메시지 처리에 더 적합하다고 판단했습니다.
+Redis Pub/Sub은 구조가 단순하면서도 여러 서버에 메시지를 빠르게 전달할 수 있다는 점에서 실시간 채팅에 적합하다고 판단해 선택했습니다.
+
+이렇게 WebSocket과 Redis Pub/Sub을 활용하여,
+채팅 메시지가 어디서든 빠르고 안정적으로 전달되는 실시간 채팅 서비스를 구축할 수 있었습니다.`,
+          archImage: {
+            src: "/assets/image/project/bidbuy/chat.png",
+            label: "채팅 구조",
+          },
+          pageImages: [
+            {
+              src: "/assets/image/project/bidbuy/chatPage.png",
+              label: "채팅 페이지",
+            },
+          ],
+        },
+        {
+          title: "알림 기능",
+          descriptionSummary:
+            "기존 채팅 시스템에서 사용한 WebSocket과 Redis Pub/Sub 구조를 그대로 활용해, 실시간성과 효율성을 모두 만족하도록 구현했습니다.",
+          descriptionFull:
+            `알림 기능은 사용자에게 중요한 이벤트를 실시간으로 빠르게 전달하는 것이 핵심이었습니다.
+이미 채팅 기능에서 WebSocket과 Redis Pub/Sub 조합을 사용하고 있었기 때문에,
+알림 기능 역시 동일한 구조를 적용해 개발 효율성과 시스템 일관성을 높였습니다.
+
+Kafka나 RabbitMQ 같은 메시지 브로커도 고려했지만,
+복잡도와 운영 비용을 줄이기 위해 기존 인프라를 그대로 활용하는 것이 더 적합하다고 판단했습니다.
+
+이렇게 WebSocket과 Redis Pub/Sub을 활용하면서,
+알림 메시지를 빠르고 안정적으로 전달할 수 있었고
+시스템 구조도 단순하게 유지할 수 있었습니다.`,
+          archImage: {
+            src: "/assets/image/project/bidbuy/alarm.png",
+            label: "알림 구조",
+          },
+          pageImages: [],
+        },
+      ],
+    },
+    troubleshootingList: [
+      {
+        feature: "채팅, 알람",
+        problem:
+          "처음에는 WebSocket만 적용하면 모든 사용자가 실시간으로 채팅할 수 있다고 생각했지만, 메시지 브로커 없이 서버가 다르면 서로 다른 서버에 접속한 사용자끼리는 채팅 메시지가 전달되지 않는다는 구조적 한계를 인지하게 되었습니다.",
+        cause:
+          "WebSocket 연결은 각 서버 인스턴스에 독립적으로 맺어지기 때문에, 별도의 메시지 브로커 없이 서버 간 메시지 동기화가 불가능하다는 원리를 제대로 이해하지 못했던 것이 원인이었습니다.",
+        solution:
+          "메시지 브로커의 필요성과 Pub/Sub 구조에 대해 학습한 뒤, Redis Pub/Sub을 도입해 모든 서버가 동일한 채널을 구독하도록 구조를 개선했습니다. 이를 통해 서버가 여러 대여도 모든 사용자가 실시간으로 메시지를 주고받을 수 있게 되었습니다.",
+      },
+    ],
+    resultreview: {
+      results: [
+        "채팅방 목록 조회 및 알림 전송을 비동기로 처리하여, 메시지 전송 시 평균 응답 속도개선",
+        "Redis를 도입해 다중 서버 환경에서도 채팅 메시지, 알림이 안정적으로 전달되도록 구현",
+        "메시지 전달 실패 시 지수 백오프 방식으로 재전송 로직을 적용",
+      ],
+      reviews: [
+        "비동기 처리와 메시지 브로커 도입 과정을 통해 실시간 시스템의 구조와 동작 원리를 이해할 수 있었습니다.",
+        "지수 백오프 재전송 로직을 구현하며, 장애 상황에서도 서비스 신뢰성을 높이는 방법을 배웠습니다.",
       ],
     },
   },

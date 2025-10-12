@@ -1,11 +1,8 @@
-// ProjectCard.tsx
-
-"use client";
-
+import { ProjectDTO } from "@/types/project";
 import React from "react";
 import styled from "styled-components";
 
-const Card = styled.div`
+const CardWrap = styled.div`
   min-width: 440px;
   max-width: 480px;
   flex: 0 0 auto;
@@ -28,7 +25,6 @@ const Card = styled.div`
     box-shadow: 0 16px 40px 0 rgba(31, 38, 135, 0.2);
   }
 `;
-
 const Img = styled.img`
   width: 100%;
   border-radius: 12px;
@@ -73,36 +69,21 @@ const Period = styled.div`
   align-self: flex-end;
 `;
 
-interface ProjectCardProps {
-  project: {
-    id: number;
-    image?: string;
-    title: string;
-    summary: string;
-    stack: string[];
-    period: string;
-  };
-  onClick?: () => void;
+export default function ProjectCard({ project, onClick }: { project: ProjectDTO, onClick: () => void }) {
+    return (
+        <CardWrap onClick={onClick}>
+            {project.overview.image && <Img src={`${process.env.NODE_ENV === "production"
+                ? "/resume-nextjs"
+                : ""
+                }${project.overview.image}`} alt={`${project.overview.title} 대표 이미지`} />}
+            <Title>{project.overview.title}</Title>
+            <Description>{project.overview.summary}</Description>
+            <StackList>
+                {project.overview.stack?.map((tech: string, idx: number) => (
+                    <StackBadge key={idx}>{tech}</StackBadge>
+                ))}
+            </StackList>
+            <Period>{project.overview.period}</Period>
+        </CardWrap>
+    );
 }
-
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, onClick }) => {
-  return (
-    <Card onClick={onClick} role="button" tabIndex={0}>
-      {project.image && <Img  src={`${
-                            process.env.NODE_ENV === "production"
-                              ? "/resume-nextjs"
-                              : ""
-                          }${project.image}`} alt={`${project.title} 대표 이미지`} />}
-      <Title>{project.title}</Title>
-      <Description>{project.summary}</Description>
-      <StackList>
-        {project.stack.map((tech) => (
-          <StackBadge key={tech}>{tech}</StackBadge>
-        ))}
-      </StackList>
-      <Period>{project.period}</Period>
-    </Card>
-  );
-};
-
-export default ProjectCard;
