@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import ProjectCard from "./ProjectCard";
-import { ScrollContainer, CardContainer, Title, SubTitle } from "../styles";
+import { ScrollContainer, CardContainer, ListTitle, SubTitle } from "../styles";
 import { ProjectDTO } from "@/types/project";
 
 interface ProjectListProps {
@@ -67,7 +67,7 @@ export default function ProjectList({ projects, onSelect }: ProjectListProps) {
 
     return (
         <>
-            <Title>프로젝트</Title>
+            <ListTitle>프로젝트</ListTitle>
             <SubTitle>프로젝트를 소개합니다.</SubTitle>
             <AnimatePresence>
                 <motion.div

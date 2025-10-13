@@ -1,8 +1,8 @@
 "use client";
 import React, { useRef, useEffect, useState } from "react";
-import Profile from "./components/profile/profile";
 import styled from "styled-components";
 import Project from "./components/project";
+import Profile from "./components/profile";
 
 const Background = styled.div`
   min-height: 100vh;

@@ -41,7 +41,7 @@ export const Card = styled.div`
   overflow-y: auto;
 `;
 
-export const Title = styled.h2`
+export const ListTitle = styled.h2`
   font-size: 2.1rem;
   font-weight: 800;
   color: #333333;
@@ -110,13 +110,13 @@ export const ScrollableProjects = styled.div`
 `;
 
 export const NavItem = styled.button.withConfig({
-    shouldForwardProp: (prop) => prop !== "active" && prop !== "isProject"
+  shouldForwardProp: (prop) => prop !== "active" && prop !== "isProject"
 }) <{ active: boolean; isProject?: boolean }>`
   border: none;
   background: ${({ active, isProject }) =>
-        active && isProject ? "#e7eaf3" : active ? "#f1f3fa" : "transparent"};
+    active && isProject ? "#e7eaf3" : active ? "#f1f3fa" : "transparent"};
   color: ${({ active, isProject }) =>
-        active ? "#213e75" : isProject ? "#354979" : "#6a728c"};
+    active ? "#213e75" : isProject ? "#354979" : "#6a728c"};
   font-size: ${({ isProject }) => (isProject ? "1.05rem" : "1.17rem")};
   font-weight: ${({ active }) => (active ? 700 : 400)};
   text-align: left;
@@ -125,11 +125,78 @@ export const NavItem = styled.button.withConfig({
   border-radius: ${({ isProject }) => (isProject ? "8px" : "10px 0 0 10px")};
   cursor: pointer;
   box-shadow: ${({ active }) =>
-        active ? "0 2px 7px #e4e8f5cc inset" : "none"};
+    active ? "0 2px 7px #e4e8f5cc inset" : "none"};
   transition: background 0.17s, color 0.15s;
   letter-spacing: 0.01em;
   &:hover {
     background: ${({ active }) => (active ? null : "#f1f3fa")};
     color: #213e75;
   }
+`;
+
+export const CardWrap = styled.div`
+  min-width: 440px;
+  max-width: 480px;
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.23);
+  border-radius: 22px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.13);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.3s, transform 0.3s;
+  cursor: pointer;
+  scroll-snap-align: center;
+  margin: 10px;
+  z-index: 1;
+
+  &:hover {
+    transform: scale(1.06);
+    z-index: 10;
+    box-shadow: 0 16px 40px 0 rgba(31, 38, 135, 0.2);
+  }
+`;
+export const Img = styled.img`
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  object-fit: cover;
+`;
+
+export const CardTitle = styled.h3`
+  font-size: 1.18rem;
+  margin-bottom: 8px;
+  color: #3730a3;
+`;
+
+export const Description = styled.p`
+  opacity: 0.88;
+  margin-bottom: 14px;
+  font-size: 0.98rem;
+  color: #333;
+`;
+
+export const StackList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 12px;
+  width: 100%;
+`;
+
+export const StackBadge = styled.span`
+  background: #e6ecfa;
+  color: #304780;
+  border-radius: 18px;
+  padding: 5px 13px;
+  font-size: 0.9rem;
+  font-weight: 600;
+`;
+
+export const Period = styled.div`
+  font-size: 0.85rem;
+  color: #7292c9;
+  margin-bottom: 3px;
+  align-self: flex-end;
 `;
