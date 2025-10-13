@@ -38,7 +38,14 @@ export const Card = styled.div`
   flex-direction: column;
   position: relative;
   padding: 52px 44px 44px 48px;
-  overflow-y: auto;
+  overflow: visible;
+`;
+
+export const CardContent = styled.div`
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-y: auto;       // 내용 스크롤은 여기!
+  overflow-x: hidden;
 `;
 
 export const ListTitle = styled.h2`

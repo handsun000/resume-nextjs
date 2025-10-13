@@ -41,6 +41,7 @@ export default function Project() {
             <ProjectDetailCard
                 project={currentProject}
                 section={section}
+                setSection={setSection}                // 이미 존재한다면 그대로 유지
                 onClose={() => setSelected(null)}
             />
         </Layout>
