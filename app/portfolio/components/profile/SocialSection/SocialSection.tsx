@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { FaGithub, FaEnvelope } from "react-icons/fa";
+import { SiVelog } from "react-icons/si";
 
 const SocialLinks = styled.div`
   display: flex;
@@ -25,19 +26,27 @@ const SocialRow = styled.a`
   }
 `;
 
+
 export default function SocialSection() {
-    return (
-        <SocialLinks>
-            <SocialRow
-                href="https://github.com/handsun000"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                <FaGithub /> github.com/handsun000
-            </SocialRow>
-            <SocialRow href="mailto:handsun000@gmail.com">
-                <FaEnvelope /> handsun000@gmail.com
-            </SocialRow>
-        </SocialLinks>
-    );
+  return (
+    <SocialLinks>
+      <SocialRow
+        href="https://github.com/handsun000"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <FaGithub /> github.com/handsun000
+      </SocialRow>
+      <SocialRow href="mailto:handsun000@gmail.com">
+        <FaEnvelope /> handsun000@gmail.com
+      </SocialRow>
+      <SocialRow
+        href="https://velog.io/@handsun000"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <SiVelog /> velog.io/@handsun000
+      </SocialRow>
+    </SocialLinks>
+  );
 }
