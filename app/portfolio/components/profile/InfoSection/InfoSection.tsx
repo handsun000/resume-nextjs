@@ -45,7 +45,7 @@ export default function InfoSection() {
             <div>
                 <ProfileImage src={profileImgPath} />
                 <Name>SON JIN YEONG</Name>
-                <Slogan>끝까지, 함께, 더 나은 답을 찾는 개발자</Slogan>
+                <Slogan>“안 되면, 될 때까지”</Slogan>
             </div>
             <div>
                 <Description>
